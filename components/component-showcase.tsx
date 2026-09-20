@@ -499,7 +499,7 @@ function CardSection() {
           </CardHeader>
           <CardContent>Картын үндсэн агуулга монгол хэлээр.</CardContent>
           <CardFooter className="border-t">
-            <Button size="sm">Үргэлжлүүлэх</Button>
+            <Button>Үргэлжлүүлэх</Button>
           </CardFooter>
         </Card>
         <Card size="sm">
