@@ -242,7 +242,9 @@ export function ComponentShowcase() {
     <div className="min-h-svh bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6">
-          <p className="font-heading text-sm font-medium">shadcn үзүүлэн</p>
+          <p className="font-heading text-sm font-semibold tracking-tight">
+            shadcn үзүүлэн
+          </p>
           <p className="text-xs text-muted-foreground">
             Харанхуй горим: <kbd>d</kbd>
           </p>
@@ -276,7 +278,9 @@ function Section({
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-xl font-medium">{title}</h2>
+        <h2 className="font-heading text-xl font-semibold tracking-tight">
+          {title}
+        </h2>
         <Separator />
       </div>
       {children}
@@ -317,19 +321,19 @@ function TypographySection() {
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
           <Caption>font-heading / 4xl</Caption>
-          <p className="font-heading text-4xl font-medium text-balance">
+          <p className="font-heading text-4xl font-semibold tracking-tight text-balance">
             Монгол хэлээр суралц
           </p>
         </div>
         <div className="flex flex-col gap-1">
           <Caption>font-heading / 2xl</Caption>
-          <p className="font-heading text-2xl font-medium">
+          <p className="font-heading text-2xl font-semibold tracking-tight">
             Өндөр ууланд хөх тэнгэр
           </p>
         </div>
         <div className="flex flex-col gap-1">
           <Caption>font-heading / xl</Caption>
-          <p className="font-heading text-xl font-medium">
+          <p className="font-heading text-xl font-semibold tracking-tight">
             Хөөрхөн хүүхэд цэцэрлэгт тоглоно
           </p>
         </div>
