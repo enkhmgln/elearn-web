@@ -32,107 +32,110 @@ function LoginBanner() {
     }
   }, [slides.length])
 
-  if (isPending) {
-    return <Skeleton className="size-full rounded-lg" />
-  }
-
-  if (slides.length === 0) {
-    return <BannerFallback />
-  }
-
-  const current = index % slides.length
+  const current = slides.length > 0 ? index % slides.length : 0
 
   return (
-    <div className="relative size-full overflow-hidden rounded-lg bg-muted">
-      <div
-        className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-        style={{ transform: `translate3d(-${current * 100}%, 0, 0)` }}
-      >
-        {slides.map((banner, bannerIndex) => {
-          const image = (
-            <Image
-              src={banner.image}
-              alt={`Баннер ${bannerIndex + 1}`}
-              fill
-              sizes="(min-width: 1024px) 66vw, 100vw"
-              className="object-cover"
-              priority={bannerIndex === 0}
-            />
-          )
-
-          return (
-            <div key={banner.id} className="relative h-full w-full shrink-0">
-              {isNotBlank(banner.link) && isHttpUrl(banner.link) ? (
-                <Link
-                  href={banner.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Баннер"
-                  className="absolute inset-0"
-                >
-                  {image}
-                </Link>
-              ) : (
-                image
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {slides.length > 1 ? (
-        <>
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon-sm"
-            aria-label="Өмнөх"
-            className="absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full shadow-sm"
-            onClick={() => {
-              setIndex(
-                (current) => (current - 1 + slides.length) % slides.length
-              )
-            }}
+    <div className="size-full min-h-0">
+      {isPending ? (
+        <Skeleton className="size-full rounded-lg" />
+      ) : slides.length === 0 ? (
+        <BannerFallback />
+      ) : (
+        <div className="relative size-full overflow-hidden rounded-lg bg-muted">
+          <div
+            className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+            style={{ transform: `translate3d(-${current * 100}%, 0, 0)` }}
           >
-            <ChevronLeftIcon />
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon-sm"
-            aria-label="Дараах"
-            className="absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full shadow-sm"
-            onClick={() => {
-              setIndex((current) => (current + 1) % slides.length)
-            }}
-          >
-            <ChevronRightIcon />
-          </Button>
-          <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2">
             {slides.map((banner, bannerIndex) => {
-              const isCurrent = bannerIndex === current
+              const image = (
+                <Image
+                  src={banner.image}
+                  alt={`Баннер ${bannerIndex + 1}`}
+                  fill
+                  sizes="(min-width: 1024px) 66vw, 100vw"
+                  className="object-cover"
+                  priority={bannerIndex === 0}
+                />
+              )
 
               return (
-                <Button
+                <div
                   key={banner.id}
-                  type="button"
-                  variant="secondary"
-                  size="icon-xs"
-                  aria-label={`Зураг ${bannerIndex + 1}`}
-                  aria-current={isCurrent ? true : undefined}
-                  className={cn(
-                    "size-2 min-h-0 rounded-full border-0 p-0 shadow-none",
-                    isCurrent ? "bg-primary" : "bg-muted-foreground"
+                  className="relative h-full w-full shrink-0"
+                >
+                  {isNotBlank(banner.link) && isHttpUrl(banner.link) ? (
+                    <Link
+                      href={banner.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Баннер"
+                      className="absolute inset-0"
+                    >
+                      {image}
+                    </Link>
+                  ) : (
+                    image
                   )}
-                  onClick={() => {
-                    setIndex(bannerIndex)
-                  }}
-                />
+                </div>
               )
             })}
           </div>
-        </>
-      ) : null}
+
+          {slides.length > 1 ? (
+            <>
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon-sm"
+                aria-label="Өмнөх"
+                className="absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full shadow-sm"
+                onClick={() => {
+                  setIndex(
+                    (current) => (current - 1 + slides.length) % slides.length
+                  )
+                }}
+              >
+                <ChevronLeftIcon />
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon-sm"
+                aria-label="Дараах"
+                className="absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full shadow-sm"
+                onClick={() => {
+                  setIndex((current) => (current + 1) % slides.length)
+                }}
+              >
+                <ChevronRightIcon />
+              </Button>
+              <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2">
+                {slides.map((banner, bannerIndex) => {
+                  const isCurrent = bannerIndex === current
+
+                  return (
+                    <Button
+                      key={banner.id}
+                      type="button"
+                      variant="secondary"
+                      size="icon-xs"
+                      aria-label={`Зураг ${bannerIndex + 1}`}
+                      aria-current={isCurrent ? true : undefined}
+                      className={cn(
+                        "size-2 min-h-0 rounded-full border-0 p-0 shadow-none",
+                        isCurrent ? "bg-primary" : "bg-muted-foreground"
+                      )}
+                      onClick={() => {
+                        setIndex(bannerIndex)
+                      }}
+                    />
+                  )
+                })}
+              </div>
+            </>
+          ) : null}
+        </div>
+      )}
     </div>
   )
 }

@@ -7,6 +7,10 @@ export function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
+  React.useEffect(() => {
+    document.documentElement.dataset.themeMotion = "true"
+  }, [])
+
   return (
     <NextThemesProvider
       attribute="class"

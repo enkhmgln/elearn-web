@@ -33,7 +33,7 @@ function LoginForm() {
     <Form
       form={form}
       pending={isPending}
-      className="flex w-full max-w-88 flex-col gap-6"
+      className="mx-auto flex w-full max-w-88 flex-col gap-6"
     >
       <h1 className="text-3xl font-bold tracking-tight">Нэвтрэх</h1>
 
@@ -66,7 +66,7 @@ function LoginForm() {
         </SubmitButton>
       </FieldGroup>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-muted-foreground">
         Шинэ хэрэглэгч?{" "}
         <Button
           variant="link"

@@ -1,11 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { MoonIcon, SunIcon } from "lucide-react"
-import { useTheme } from "next-themes"
-
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { ComponentsSection } from "./components-section"
 import { TokensSection } from "./tokens-section"
 import { TypographySection } from "./typography-section"
@@ -22,16 +18,6 @@ export const SECTIONS = [
 ] as const
 
 export function ShowcasePage() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
-
   return (
     <div className="min-h-svh bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm">
@@ -88,28 +74,5 @@ export function ShowcasePage() {
         </div>
       </div>
     </div>
-  )
-}
-
-function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const isDark = mounted && resolvedTheme === "dark"
-
-  return (
-    <Button
-      type="button"
-      variant="outline"
-      size="icon"
-      aria-label={isDark ? "Цайвар горим" : "Харанхуй горим"}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-    >
-      {isDark ? <SunIcon /> : <MoonIcon />}
-    </Button>
   )
 }

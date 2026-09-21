@@ -121,6 +121,26 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+    --animate-theme-icon-show: theme-icon-show 0.3s ease-out forwards;
+    --animate-theme-icon-hide: theme-icon-hide 0.3s ease-out forwards;
+
+    @keyframes theme-icon-show {
+        from {
+            transform: rotate(90deg) scale(0);
+        }
+        to {
+            transform: rotate(0deg) scale(1);
+        }
+    }
+
+    @keyframes theme-icon-hide {
+        from {
+            transform: rotate(0deg) scale(1);
+        }
+        to {
+            transform: rotate(-90deg) scale(0);
+        }
+    }
 }
 
 @layer base {
