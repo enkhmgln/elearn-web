@@ -231,6 +231,7 @@ function ActionsDemos() {
             Хичээл
           </Toggle>
           <Toggle variant="outline">Даалгавар</Toggle>
+          <Toggle size="lg">Том</Toggle>
         </div>
       </ShowcaseBlock>
 
@@ -361,15 +362,16 @@ function FormsDemos() {
       </header>
 
       <ShowcaseBlock title="Field + Input">
-        <FieldGroup className="max-w-md">
+        <FieldGroup className="max-w-md gap-4">
           <Field>
-            <FieldLabel htmlFor="student-name">Сурагчийн нэр</FieldLabel>
-            <Input id="student-name" placeholder="Бат-Эрдэнэ" />
+            <Input id="student-name" label="Сурагчийн нэр" />
             <FieldDescription>Бүртгэлийн нэрээр хайна.</FieldDescription>
           </Field>
           <Field>
-            <FieldLabel htmlFor="note">Тэмдэглэл</FieldLabel>
-            <Textarea id="note" placeholder="Багшийн тэмдэглэл…" />
+            <Input id="student-password" type="password" label="Нууц үг" />
+          </Field>
+          <Field>
+            <Textarea id="note" label="Тэмдэглэл" />
           </Field>
           <Field orientation="horizontal">
             <Checkbox id="notify" />
@@ -379,6 +381,25 @@ function FormsDemos() {
             <Switch id="publish" />
             <Label htmlFor="publish">Нийтлэх</Label>
           </Field>
+          <Button type="button" size="lg" className="w-full">
+            Хадгалах
+          </Button>
+        </FieldGroup>
+      </ShowcaseBlock>
+
+      <ShowcaseBlock title="Input">
+        <FieldGroup className="max-w-md">
+          <Input label="Сурагчийн нэр" />
+          <Input
+            type="email"
+            label="Имэйл"
+            defaultValue="bat-erdene@school.mn"
+          />
+          <Input type="password" label="Нууц үг" />
+          <Textarea label="Тэмдэглэл" />
+          <Input label="Идэвхгүй" disabled />
+          <Input label="Алдаатай" aria-invalid defaultValue="8911" />
+          <Input label="Нэвтрэх нэр" className="border-transparent bg-muted" />
         </FieldGroup>
       </ShowcaseBlock>
 
@@ -411,7 +432,7 @@ function FormsDemos() {
 
       <ShowcaseBlock title="Select">
         <Select items={[...SUBJECTS]} defaultValue={null}>
-          <SelectTrigger className="w-56">
+          <SelectTrigger size="lg" className="w-full max-w-md">
             <SelectValue />
           </SelectTrigger>
           <SelectContent alignItemWithTrigger={false}>
@@ -624,8 +645,7 @@ function OverlaysDemos() {
               </DialogDescription>
             </DialogHeader>
             <Field>
-              <FieldLabel htmlFor="score">Оноо</FieldLabel>
-              <Input id="score" defaultValue="96" />
+              <Input id="score" label="Оноо" defaultValue="96" />
             </Field>
             <DialogFooter>
               <DialogClose render={<Button variant="outline" />}>

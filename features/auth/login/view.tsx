@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react"
 import { MoonIcon, SunIcon } from "lucide-react"
 import { useTheme } from "next-themes"
-
 import { Button } from "@/components/ui/button"
-
 import { LoginBanner } from "./banner"
 import { LoginForm } from "./form"
 

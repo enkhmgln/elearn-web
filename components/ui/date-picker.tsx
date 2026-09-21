@@ -176,6 +176,7 @@ function DatePickerTrigger({
         <Button
           id={id}
           variant="outline"
+          size="lg"
           className={cn(
             "w-full justify-between font-normal",
             !hasValue && "text-muted-foreground",

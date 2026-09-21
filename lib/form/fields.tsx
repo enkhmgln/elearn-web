@@ -1,197 +1,292 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react"
 import type { AnyFieldApi } from "@tanstack/react-form"
-import { EyeIcon, EyeOffIcon } from "lucide-react"
-
+import { cn } from "cn"
 import { useFormContext } from "@/lib/form/form"
-import { Checkbox as CheckboxControl } from "@/components/ui/checkbox"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
+import { Checkbox } from "@/components/ui/checkbox"
+import { DatePicker, DateRangePicker } from "@/components/ui/date-picker"
+import {
+  Field as FieldRoot,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
   InputGroupInput,
+  InputGroupTextarea,
 } from "@/components/ui/input-group"
+import { InputOTP } from "@/components/ui/input-otp"
+import { RadioGroup } from "@/components/ui/radio-group"
+import { Select } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
 
-function BoundField({
+type FieldMeta = {
+  id: string
+  isInvalid: boolean
+  disabled: boolean
+}
+
+type Binder = {
+  defaultValue?: unknown
+  props: (field: AnyFieldApi, meta: FieldMeta) => Record<string, unknown>
+}
+
+const binders = new Map<unknown, Binder>()
+
+function bindText(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    value: String(field.state.value ?? ""),
+    disabled: meta.disabled,
+    "aria-invalid": meta.isInvalid,
+    onBlur: field.handleBlur,
+    onChange: (event: { target: { value: string } }) => {
+      field.handleChange(event.target.value)
+    },
+  }
+}
+
+function bindChecked(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    checked: field.state.value === true,
+    disabled: meta.disabled,
+    onCheckedChange: (checked: boolean) => {
+      field.handleChange(checked === true)
+    },
+  }
+}
+
+function bindSelect(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    value: field.state.value ?? null,
+    disabled: meta.disabled,
+    onValueChange: (value: unknown) => {
+      field.handleChange(value)
+    },
+  }
+}
+
+function bindChoice(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    value: field.state.value ?? "",
+    disabled: meta.disabled,
+    onValueChange: (value: unknown) => {
+      field.handleChange(value)
+    },
+  }
+}
+
+function bindDate(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    value: field.state.value,
+    disabled: meta.disabled,
+    onChange: (value: unknown) => {
+      field.handleChange(value)
+    },
+  }
+}
+
+function bindOtp(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    value: String(field.state.value ?? ""),
+    disabled: meta.disabled,
+    onChange: (value: string) => {
+      field.handleChange(value)
+    },
+  }
+}
+
+function bindSlider(field: AnyFieldApi, meta: FieldMeta) {
+  return {
+    id: meta.id,
+    name: field.name,
+    value: field.state.value,
+    disabled: meta.disabled,
+    onValueChange: (value: unknown) => {
+      field.handleChange(value)
+    },
+  }
+}
+
+binders.set(Input, { defaultValue: "", props: bindText })
+binders.set(InputGroupInput, { defaultValue: "", props: bindText })
+binders.set(InputGroupTextarea, { defaultValue: "", props: bindText })
+binders.set(Textarea, { defaultValue: "", props: bindText })
+binders.set(Checkbox, { defaultValue: false, props: bindChecked })
+binders.set(Switch, { defaultValue: false, props: bindChecked })
+binders.set(Select, { defaultValue: null, props: bindSelect })
+binders.set(RadioGroup, { defaultValue: "", props: bindChoice })
+binders.set(DatePicker, { props: bindDate })
+binders.set(DateRangePicker, { props: bindDate })
+binders.set(InputOTP, { defaultValue: "", props: bindOtp })
+binders.set(Slider, { props: bindSlider })
+
+function findBinder(node: ReactNode): Binder | undefined {
+  if (!isValidElement(node)) {
+    return undefined
+  }
+
+  const binder = binders.get(node.type)
+
+  if (binder) {
+    return binder
+  }
+
+  let found: Binder | undefined
+
+  Children.forEach(
+    (node.props as { children?: ReactNode }).children,
+    (child) => {
+      if (found) {
+        return
+      }
+
+      found = findBinder(child)
+    }
+  )
+
+  return found
+}
+
+function bindNode(
+  node: ReactNode,
+  field: AnyFieldApi,
+  meta: FieldMeta
+): ReactNode {
+  if (!isValidElement(node)) {
+    return node
+  }
+
+  const binder = binders.get(node.type)
+
+  if (binder) {
+    const childDisabled = Boolean(
+      (node.props as { disabled?: boolean }).disabled
+    )
+
+    return cloneElement(
+      node as ReactElement,
+      {
+        ...binder.props(field, meta),
+        disabled: childDisabled || meta.disabled,
+      } as never
+    )
+  }
+
+  const nested = (node.props as { children?: ReactNode }).children
+
+  if (nested == null) {
+    return node
+  }
+
+  return cloneElement(
+    node as ReactElement,
+    {
+      children: Children.map(nested, (child) => bindNode(child, field, meta)),
+    } as never
+  )
+}
+
+function Field({
   name,
-  defaultValue,
+  label,
+  labelHidden = false,
   orientation = "vertical",
+  defaultValue,
+  id,
+  disabled,
   children,
 }: {
   name: string
-  defaultValue?: unknown
+  label?: string
+  labelHidden?: boolean
   orientation?: "vertical" | "horizontal"
-  children: (
-    field: AnyFieldApi,
-    meta: {
-      id: string
-      isInvalid: boolean
-      disabled: boolean
-    }
-  ) => ReactNode
+  defaultValue?: unknown
+  id?: string
+  disabled?: boolean
+  children: ReactElement
 }) {
-  const { form, disabled } = useFormContext()
+  const { form, disabled: formDisabled } = useFormContext()
+  const binder = findBinder(children)
+
+  if (!binder) {
+    throw new Error(`Field "${name}" has no bindable control.`)
+  }
+
+  const resolvedDefault =
+    defaultValue !== undefined ? defaultValue : binder.defaultValue
   const fieldDefault =
-    defaultValue !== undefined && form.getFieldValue(name) === undefined
-      ? defaultValue
+    resolvedDefault !== undefined && form.getFieldValue(name) === undefined
+      ? resolvedDefault
       : undefined
 
   return (
     <form.Field name={name} defaultValue={fieldDefault}>
       {(field) => {
         const isInvalid = field.state.meta.errors.length > 0
+        const meta: FieldMeta = {
+          id: id ?? field.name,
+          isInvalid,
+          disabled: disabled ?? formDisabled,
+        }
+        const control = bindNode(children, field, meta)
+
+        const labelNode = label ? (
+          <FieldLabel
+            htmlFor={meta.id}
+            className={cn(
+              labelHidden ? "sr-only" : undefined,
+              orientation === "horizontal"
+                ? "font-normal text-muted-foreground"
+                : undefined
+            )}
+          >
+            {label}
+          </FieldLabel>
+        ) : null
 
         return (
-          <Field
+          <FieldRoot
             orientation={orientation}
             data-invalid={isInvalid}
-            data-disabled={disabled ? true : undefined}
+            data-disabled={meta.disabled ? true : undefined}
           >
-            {children(field, {
-              id: field.name,
-              isInvalid,
-              disabled,
-            })}
+            {orientation === "horizontal" ? (
+              <>
+                {control}
+                {labelNode}
+              </>
+            ) : (
+              <>
+                {labelNode}
+                {control}
+              </>
+            )}
             {isInvalid ? <FieldError errors={field.state.meta.errors} /> : null}
-          </Field>
+          </FieldRoot>
         )
       }}
     </form.Field>
   )
 }
 
-function TextField({
-  name,
-  label,
-  labelHidden = false,
-  id,
-  type,
-  className,
-  disabled,
-  ...props
-}: {
-  name: string
-  label?: string
-  labelHidden?: boolean
-} & Omit<
-  React.ComponentProps<typeof Input>,
-  "name" | "value" | "defaultValue" | "onChange" | "onBlur"
->) {
-  const [showPassword, setShowPassword] = useState(false)
-  const isPassword = type === "password"
-
-  return (
-    <BoundField name={name} defaultValue="">
-      {(field, meta) => {
-        const fieldId = id ?? meta.id
-        const fieldDisabled = disabled ?? meta.disabled
-        const value = String(field.state.value ?? "")
-
-        return (
-          <>
-            {label ? (
-              <FieldLabel
-                htmlFor={fieldId}
-                className={labelHidden ? "sr-only" : undefined}
-              >
-                {label}
-              </FieldLabel>
-            ) : null}
-            {isPassword ? (
-              <InputGroup className={className}>
-                <InputGroupInput
-                  {...props}
-                  id={fieldId}
-                  name={field.name}
-                  type={showPassword ? "text" : "password"}
-                  value={value}
-                  disabled={fieldDisabled}
-                  aria-invalid={meta.isInvalid}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => {
-                    field.handleChange(event.target.value)
-                  }}
-                />
-                <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    size="icon-xs"
-                    aria-label={
-                      showPassword ? "Нууц үг нуух" : "Нууц үг харуулах"
-                    }
-                    disabled={fieldDisabled}
-                    onClick={() => {
-                      setShowPassword((current) => !current)
-                    }}
-                  >
-                    {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
-            ) : (
-              <Input
-                {...props}
-                id={fieldId}
-                name={field.name}
-                type={type}
-                value={value}
-                disabled={fieldDisabled}
-                aria-invalid={meta.isInvalid}
-                className={className}
-                onBlur={field.handleBlur}
-                onChange={(event) => {
-                  field.handleChange(event.target.value)
-                }}
-              />
-            )}
-          </>
-        )
-      }}
-    </BoundField>
-  )
-}
-
-function Checkbox({
-  name,
-  label,
-  id,
-  disabled,
-}: {
-  name: string
-  label: string
-  id?: string
-  disabled?: boolean
-}) {
-  return (
-    <BoundField name={name} defaultValue={false} orientation="horizontal">
-      {(field, meta) => {
-        const fieldId = id ?? meta.id
-        const fieldDisabled = disabled ?? meta.disabled
-
-        return (
-          <>
-            <CheckboxControl
-              id={fieldId}
-              name={field.name}
-              checked={field.state.value === true}
-              disabled={fieldDisabled}
-              onCheckedChange={(checked) => {
-                field.handleChange(checked === true)
-              }}
-            />
-            <FieldLabel
-              htmlFor={fieldId}
-              className="font-normal text-muted-foreground"
-            >
-              {label}
-            </FieldLabel>
-          </>
-        )
-      }}
-    </BoundField>
-  )
-}
-
-export { Checkbox, TextField }
+export { Field }

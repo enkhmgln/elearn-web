@@ -2,13 +2,13 @@
 
 import Link from "next/link"
 import { login } from "@/features/auth/api"
-import { Checkbox, Form, TextField, useForm } from "@/lib/form"
+import { Field, Form, SubmitButton, useForm } from "@/lib/form"
 import { useMutation } from "@/lib/http"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { FieldGroup } from "@/components/ui/field"
-import { Spinner } from "@/components/ui/spinner"
+import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/sonner"
-
 import { loginSchema } from "./schema"
 
 function LoginForm() {
@@ -32,35 +32,38 @@ function LoginForm() {
   return (
     <Form
       form={form}
-      disabled={isPending}
+      pending={isPending}
       className="flex w-full max-w-88 flex-col gap-6"
     >
       <h1 className="text-3xl font-bold tracking-tight">Нэвтрэх</h1>
 
-      <FieldGroup className="gap-3">
-        <TextField
-          name="email"
-          type="email"
-          autoComplete="email"
-          placeholder="Нэвтрэх нэр"
-          label="Нэвтрэх нэр"
-          labelHidden
-          className="h-11 border-transparent bg-muted"
-        />
-        <TextField
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          placeholder="Нууц үг"
-          label="Нууц үг"
-          labelHidden
-          className="h-11 border-transparent bg-muted"
-        />
-        <Checkbox name="remember" label="Нэвтрэх нэр сануулах" />
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? <Spinner data-icon="inline-start" /> : null}
+      <FieldGroup className="gap-4">
+        <Field name="email">
+          <Input
+            type="email"
+            label="Имэйл хаяг"
+            autoComplete="email"
+            className="border-transparent bg-muted"
+          />
+        </Field>
+        <Field name="password">
+          <Input
+            type="password"
+            label="Нууц үг"
+            autoComplete="current-password"
+            className="border-transparent bg-muted"
+          />
+        </Field>
+        <Field
+          name="remember"
+          label="Нэвтрэх нэр сануулах"
+          orientation="horizontal"
+        >
+          <Checkbox />
+        </Field>
+        <SubmitButton size="lg" className="mt-1 w-full">
           Нэвтрэх
-        </Button>
+        </SubmitButton>
       </FieldGroup>
 
       <p className="text-center text-sm text-muted-foreground">
