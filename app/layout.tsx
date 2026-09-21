@@ -1,8 +1,6 @@
 import localFont from "next/font/local"
-
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { Providers } from "@/components/providers"
 import { cn } from "@/lib/utils"
 
 const gip = localFont({
@@ -34,9 +32,7 @@ export default function RootLayout({
       className={cn("scroll-smooth! font-sans antialiased", gip.variable)}
     >
       <body>
-        <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
