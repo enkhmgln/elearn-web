@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import { CircleAlertIcon, MapPinIcon } from "lucide-react"
-
-import { locationCities } from "@/features/location/api"
+import { cities } from "@/features/location/api"
 import { useQuery } from "@/lib/http"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -34,10 +33,9 @@ import { Spinner } from "@/components/ui/spinner"
 
 function CityList() {
   const [page, setPage] = useState(1)
-  const { data, isPending, isFetching, error, refetch } = useQuery(
-    locationCities,
-    { page }
-  )
+  const { data, isPending, isFetching, error, refetch } = useQuery(cities, {
+    page,
+  })
 
   return (
     <Card className="w-full max-w-md">

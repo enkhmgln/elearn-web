@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Prefer a design-system gallery (components, colors, tokens, typography) over a product landing page when iterating on the template.
 - Keep Mongolian/Cyrillic sample copy in the showcase so typography can be judged; do not switch the gallery to English-only labels.
-- Keep `lib` generic and reusable; put domain endpoints and feature UI under `features/`.
+- Keep `lib` generic and reusable; put domain endpoints and feature UI under `features/`. No `components/` folder inside a feature (root `components/` is the design system). Split a feature by flow (`auth/login`, `location/city`): `view.tsx` is a page body (`LoginView`), `list.tsx` is a list widget (`CityList`). Shared `api.ts` and `types.ts` stay at the feature root. `User` lives in `features/user`, not auth. `app/` pages only return the view. Nested REST paths use `:param` in `defineQuery` (`/api/location/cities/:cityId/districts/`); leftover params become the query string.
 - Prefer `export *` in barrel `index.ts` files over named re-exports.
 - Prefer existing shadcn/Base UI primitives over hand-rolled equivalents when they exist.
 - Format dates as `YYYY/MM/DD` (e.g. `2024/12/31`) and include time-ago helpers; storage helpers should be generic get/set only, not session wrappers.
