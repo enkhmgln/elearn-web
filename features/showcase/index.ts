@@ -1,1 +1,1 @@
-export { ShowcasePage } from "./components/showcase-page"
+export * from "./showcase-page"
