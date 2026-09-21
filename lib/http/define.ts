@@ -1,4 +1,5 @@
 import { HttpMethod, request } from "./client"
+import type { ApiData } from "./types"
 
 export type Path<TParams> = string | ((params: TParams) => string)
 
@@ -8,7 +9,7 @@ export type DefinedQuery<TData extends object, TParams = void> = {
   fetch(params: TParams, init?: { signal?: AbortSignal }): Promise<TData>
 }
 
-export type DefinedMutation<TData extends object, TBody = void> = {
+export type DefinedMutation<TData extends ApiData = object, TBody = void> = {
   readonly method: Exclude<HttpMethod, HttpMethod.GET>
   readonly path: Path<TBody>
   mutate(body: TBody, init?: { signal?: AbortSignal }): Promise<TData>
@@ -33,7 +34,10 @@ export function defineQuery<TData extends object, TParams = void>(config: {
   }
 }
 
-export function defineMutation<TData extends object, TBody = void>(config: {
+export function defineMutation<
+  TData extends ApiData = object,
+  TBody = void,
+>(config: {
   method: Exclude<HttpMethod, HttpMethod.GET>
   path: Path<TBody>
 }): DefinedMutation<TData, TBody> {

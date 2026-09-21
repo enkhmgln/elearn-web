@@ -19,9 +19,7 @@ export type ApiRequestOptions = {
   headers?: HeadersInit
 }
 
-export async function request<T extends object>(
-  options: ApiRequestOptions
-): Promise<T> {
+export async function request<T>(options: ApiRequestOptions): Promise<T> {
   const url = new URL(options.path, `${constants.API_URL}/`)
 
   if (options.query) {

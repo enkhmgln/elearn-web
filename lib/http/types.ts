@@ -1,4 +1,6 @@
-export type ApiSuccess<T extends object> = {
+export type ApiData = object | string | null
+
+export type ApiSuccess<T = object> = {
   success: true
   message: string
   data: T
@@ -10,7 +12,7 @@ export type ApiFailure = {
   data: null
 }
 
-export type ApiEnvelope<T extends object> = ApiSuccess<T> | ApiFailure
+export type ApiEnvelope<T = object> = ApiSuccess<T> | ApiFailure
 
 export type Paginated<T> = {
   count: number

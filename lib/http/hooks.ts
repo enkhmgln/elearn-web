@@ -7,15 +7,18 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query"
 
+import { toast } from "@/components/ui/sonner"
+
 import type { DefinedMutation, DefinedQuery } from "./define"
 import type { ApiError } from "./error"
+import type { ApiData } from "./types"
 
 type QueryOptions<TData extends object> = Omit<
   UseQueryOptions<TData, ApiError, TData, readonly unknown[]>,
   "queryKey" | "queryFn"
 >
 
-type MutationOptions<TData extends object, TBody> = Omit<
+type MutationOptions<TData, TBody> = Omit<
   UseMutationOptions<TData, ApiError, TBody>,
   "mutationFn"
 >
@@ -32,12 +35,16 @@ export function useQuery<TData extends object, TParams = void>(
   })
 }
 
-export function useMutation<TData extends object, TBody = void>(
+export function useMutation<TData extends ApiData = object, TBody = void>(
   endpoint: DefinedMutation<TData, TBody>,
   options?: MutationOptions<TData, TBody>
 ) {
   return useBaseMutation({
     mutationFn: (body: TBody) => endpoint.mutate(body),
     ...options,
+    onError(error, variables, onMutateResult, context) {
+      toast.error(error.message)
+      options?.onError?.(error, variables, onMutateResult, context)
+    },
   })
 }
