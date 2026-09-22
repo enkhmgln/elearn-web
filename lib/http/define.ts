@@ -1,4 +1,4 @@
-import { HttpMethod, request } from "./client"
+import { HttpMethod, request, requestText } from "./client"
 import type { ApiData } from "./types"
 
 const PATH_PARAM = /:([A-Za-z_]\w*)/g
@@ -15,6 +15,25 @@ export type DefinedMutation<TData extends ApiData = object, TBody = void> = {
   readonly method: Exclude<HttpMethod, HttpMethod.GET>
   readonly path: Path<TBody>
   mutate(body: TBody, init?: { signal?: AbortSignal }): Promise<TData>
+}
+
+export function defineTextQuery(config: {
+  path: string
+}): DefinedQuery<{ html: string }> {
+  return {
+    path: config.path,
+    queryKey() {
+      return ["http", config.path]
+    },
+    async fetch(_params, init) {
+      const html = await requestText({
+        path: config.path,
+        signal: init?.signal,
+      })
+
+      return { html }
+    },
+  }
 }
 
 export function defineQuery<TData extends object, TParams = void>(config: {

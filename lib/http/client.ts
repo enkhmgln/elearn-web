@@ -20,22 +20,7 @@ export type ApiRequestOptions = {
 }
 
 export async function request<T>(options: ApiRequestOptions): Promise<T> {
-  const url = new URL(options.path, `${constants.API_URL}/`)
-
-  if (options.query) {
-    for (const [key, value] of Object.entries(options.query)) {
-      if (value === undefined || value === null || value === "") {
-        continue
-      }
-
-      if (typeof value === "object") {
-        continue
-      }
-
-      url.searchParams.set(key, String(value))
-    }
-  }
-
+  const url = buildUrl(options.path, options.query)
   const method = options.method ?? HttpMethod.GET
   const hasBody = options.body !== undefined && method !== HttpMethod.GET
 
@@ -57,4 +42,48 @@ export async function request<T>(options: ApiRequestOptions): Promise<T> {
   }
 
   return json.data
+}
+
+export async function requestText(
+  options: Omit<ApiRequestOptions, "body" | "method">
+): Promise<string> {
+  const response = await fetch(buildUrl(options.path, options.query), {
+    method: HttpMethod.GET,
+    headers: {
+      Accept: "text/html",
+      ...options.headers,
+    },
+    signal: options.signal,
+  })
+
+  if (!response.ok) {
+    throw new ApiError(
+      response.statusText || String(response.status),
+      response.status
+    )
+  }
+
+  return response.text()
+}
+
+function buildUrl(path: string, query?: object) {
+  const url = new URL(path, `${constants.API_URL}/`)
+
+  if (!query) {
+    return url
+  }
+
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null || value === "") {
+      continue
+    }
+
+    if (typeof value === "object") {
+      continue
+    }
+
+    url.searchParams.set(key, String(value))
+  }
+
+  return url
 }
