@@ -1,49 +1,85 @@
 "use client"
 
-import { Fragment } from "react"
 import Link from "next/link"
+import { login } from "@/features/auth/api"
+import { Field, Form, SubmitButton, useForm } from "@/lib/form"
+import { useMutation } from "@/lib/http"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { LoginBanner } from "./banner"
-import { LoginForm } from "./form"
-
-const legalLinks = [
-  { href: "/faq", label: "Түгээмэл асуулт" },
-  { href: "/terms", label: "Үйлчилгээний нөхцөл" },
-  { href: "/privacy", label: "Нууцлалын бодлого" },
-] as const
+import { FieldGroup } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { toast } from "@/components/ui/sonner"
+import { loginSchema } from "./schema"
 
 function LoginView() {
+  const { mutate, isPending } = useMutation(login, {
+    onSuccess() {
+      toast.success("Амжилттай.")
+    },
+  })
+  const form = useForm({
+    schema: loginSchema,
+    onSubmit({ value }) {
+      mutate({
+        email: value.email,
+        password: value.password,
+        fcm_token: "",
+        device_id: "",
+      })
+    },
+  })
+
   return (
-    <div className="flex min-h-svh px-4 py-3 lg:h-svh lg:px-6 lg:py-4">
-      <div className="hidden min-w-0 flex-5 lg:block xl:flex-6">
-        <LoginBanner />
-      </div>
-      <div className="grid min-w-0 flex-3 grid-rows-[1fr_auto_1fr] px-6">
-        <div className="self-start justify-self-end">
-          <ThemeToggle />
+    <Form
+      form={form}
+      pending={isPending}
+      className="mx-auto flex w-full max-w-88 flex-col gap-6"
+    >
+      <h1 className="text-3xl font-bold tracking-tight">Нэвтрэх</h1>
+
+      <FieldGroup className="gap-4">
+        <Field name="email">
+          <Input
+            type="email"
+            label="Имэйл хаяг"
+            autoComplete="email"
+            className="border-transparent bg-muted"
+          />
+        </Field>
+        <Field name="password">
+          <Input
+            type="password"
+            label="Нууц үг"
+            autoComplete="current-password"
+            className="border-transparent bg-muted"
+          />
+        </Field>
+        <div className="flex justify-end">
+          <Button
+            variant="link"
+            nativeButton={false}
+            render={<Link href="/reset-password" />}
+            className="h-auto px-0 text-sm text-muted-foreground"
+          >
+            Нууц үг мартсан
+          </Button>
         </div>
-        <LoginForm />
-        <nav className="flex items-center justify-center gap-3 self-end py-4">
-          {legalLinks.map((link, index) => (
-            <Fragment key={link.href}>
-              {index > 0 ? (
-                <Separator orientation="vertical" className="h-4" />
-              ) : null}
-              <Button
-                variant="link"
-                nativeButton={false}
-                render={<Link href={link.href} />}
-                className="h-auto px-0 text-xs font-semibold text-muted-foreground"
-              >
-                {link.label}
-              </Button>
-            </Fragment>
-          ))}
-        </nav>
-      </div>
-    </div>
+        <SubmitButton size="lg" className="mt-1 w-full">
+          Нэвтрэх
+        </SubmitButton>
+      </FieldGroup>
+
+      <p className="text-center text-muted-foreground">
+        Шинэ хэрэглэгч?{" "}
+        <Button
+          variant="link"
+          nativeButton={false}
+          render={<Link href="/signup" />}
+          className="h-auto px-0"
+        >
+          Бүртгүүлэх
+        </Button>
+      </p>
+    </Form>
   )
 }
 
