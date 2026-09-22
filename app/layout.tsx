@@ -1,8 +1,9 @@
 import { gip } from "@/assets/fonts"
 import { Providers } from "@/components/providers"
 import { cn } from "@/lib/utils"
-
 import "./globals.css"
+
+export { metadata } from "@/lib/metadata"
 
 export default function RootLayout({
   children,
