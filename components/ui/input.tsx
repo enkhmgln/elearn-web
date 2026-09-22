@@ -7,10 +7,10 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const inputClassName =
-  "w-full min-w-0 rounded-lg border border-border bg-background px-3.5 text-base font-normal transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive md:text-sm dark:aria-invalid:border-destructive/50"
+  "w-full min-w-0 rounded-lg border border-border bg-background px-3.5 text-base font-normal transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 
 const floatLabelClassName =
-  "pointer-events-none absolute top-1/2 left-3.5 z-10 origin-left -translate-y-1/2 text-base text-muted-foreground transition-[top,transform,font-size] duration-200 ease-out md:text-sm peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:translate-y-0 peer-not-placeholder-shown:text-xs peer-disabled:opacity-50 peer-aria-invalid:text-destructive"
+  "pointer-events-none absolute top-1/2 left-3.5 z-10 origin-left -translate-y-1/2 text-base text-muted-foreground transition-[top,transform,font-size] duration-200 ease-out md:text-sm peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:translate-y-0 peer-not-placeholder-shown:text-xs peer-disabled:opacity-50"
 
 type InputProps = React.ComponentProps<"input"> & {
   label?: string
