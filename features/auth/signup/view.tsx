@@ -8,13 +8,13 @@ import { Field, Form, SubmitButton, useForm } from "@/lib/form"
 import { useMutation } from "@/lib/http"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
+import { toast } from "@/components/ui/sonner"
 import { Input } from "@/components/ui/input"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { toast } from "@/components/ui/sonner"
 import {
   signupCodeSchema,
   signupEmailSchema,

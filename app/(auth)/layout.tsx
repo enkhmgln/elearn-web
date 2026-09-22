@@ -1,5 +1,7 @@
+import Image from "next/image"
 import Link from "next/link"
 import { AuthBanner } from "@/features/auth/banner"
+import { constants } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -20,7 +22,13 @@ export default function AuthLayout({
         <AuthBanner />
       </div>
       <div className="grid min-w-0 flex-3 grid-rows-[1fr_auto_1fr] px-6">
-        <div className="self-start justify-self-end">
+        <div className="flex items-center justify-between self-start">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image src="/images/logo.svg" alt="" width={36} height={36} />
+            <p className="font-heading text-lg font-semibold tracking-tight">
+              {constants.APP_NAME}
+            </p>
+          </Link>
           <ThemeToggle />
         </div>
         {children}
