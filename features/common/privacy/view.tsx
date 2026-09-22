@@ -15,7 +15,14 @@ function PrivacyView() {
     <iframe
       title="Нууцлалын бодлого"
       srcDoc={data?.html}
-      className="block h-svh w-full border-0"
+      className="block w-full border-0"
+      onLoad={(event) => {
+        const frame = event.currentTarget
+        const height = frame.contentDocument?.documentElement.scrollHeight
+        if (height) {
+          frame.style.height = `${height}px`
+        }
+      }}
     />
   )
 }
