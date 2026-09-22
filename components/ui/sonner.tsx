@@ -11,27 +11,6 @@ import {
 import { useTheme } from "next-themes"
 import { toast, Toaster as Sonner, type ToasterProps } from "sonner"
 
-import { cn } from "cn"
-
-function StatusIcon({
-  icon: Icon,
-  className,
-}: {
-  icon: typeof CircleCheckIcon
-  className: string
-}) {
-  return (
-    <span
-      className={cn(
-        "flex size-5 items-center justify-center rounded-full",
-        className
-      )}
-    >
-      <Icon />
-    </span>
-  )
-}
-
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
 
@@ -41,34 +20,19 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       position="top-center"
       icons={{
-        success: (
-          <StatusIcon
-            icon={CircleCheckIcon}
-            className="bg-success/15 text-success"
-          />
-        ),
-        error: (
-          <StatusIcon
-            icon={CircleXIcon}
-            className="bg-destructive/15 text-destructive"
-          />
-        ),
-        warning: (
-          <StatusIcon
-            icon={CircleAlertIcon}
-            className="bg-warning/15 text-warning"
-          />
-        ),
-        info: (
-          <StatusIcon icon={InfoIcon} className="bg-primary/15 text-primary" />
-        ),
+        success: <CircleCheckIcon className="text-success" />,
+        error: <CircleXIcon className="text-destructive" />,
+        warning: <CircleAlertIcon className="text-warning" />,
+        info: <InfoIcon className="text-primary" />,
         loading: <Loader2Icon className="animate-spin" />,
       }}
+      richColors
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
+          "--success-text": "var(--foreground)",
+          "--error-text": "var(--foreground)",
+          "--warning-text": "var(--foreground)",
+          "--info-text": "var(--foreground)",
         } as CSSProperties
       }
       {...props}
