@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 const BANNER_INTERVAL_MS = 10000
 
-function LoginBanner() {
+function AuthBanner() {
   const [index, setIndex] = useState(0)
   const { data, isPending } = useQuery(banners, { page: 1 })
   const slides = data?.results ?? []
@@ -150,4 +150,4 @@ function BannerFallback() {
   )
 }
 
-export { LoginBanner }
+export { AuthBanner }

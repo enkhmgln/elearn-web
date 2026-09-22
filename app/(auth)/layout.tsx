@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { LoginBanner } from "@/features/auth/login/banner"
+import { AuthBanner } from "@/features/auth/banner"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -17,7 +17,7 @@ export default function AuthLayout({
   return (
     <div className="flex min-h-svh px-4 py-3 lg:h-svh lg:px-6 lg:py-4">
       <div className="hidden min-w-0 flex-5 lg:block xl:flex-6">
-        <LoginBanner />
+        <AuthBanner />
       </div>
       <div className="grid min-w-0 flex-3 grid-rows-[1fr_auto_1fr] px-6">
         <div className="self-start justify-self-end">
