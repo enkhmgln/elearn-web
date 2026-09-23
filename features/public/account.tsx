@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { LogOutIcon, UserIcon } from "lucide-react"
 import type { User } from "@/features/user"
-import { clearSession, useHydrated, useSession } from "@/lib/session"
+import { clearSession, useSession } from "@/lib/session"
 import { initials } from "@/lib/utils/string"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -19,8 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 function AccountMenu() {
-  const ready = useHydrated()
-  const session = useSession()
+  const { session, ready } = useSession()
 
   if (!ready) {
     return null

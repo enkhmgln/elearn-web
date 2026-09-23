@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useHydrated, useSession } from "@/lib/session"
+import { useSession } from "@/lib/session"
 
 export default function MainLayout({
   children,
@@ -10,18 +10,13 @@ export default function MainLayout({
   children: React.ReactNode
 }>) {
   const router = useRouter()
-  const session = useSession()
-  const ready = useHydrated()
+  const { session, ready } = useSession()
 
   useEffect(() => {
     if (ready && !session) {
       router.replace("/login")
     }
   }, [ready, session, router])
-
-  if (!ready || !session) {
-    return null
-  }
 
   return children
 }

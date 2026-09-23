@@ -7,10 +7,13 @@ function subscribe() {
   return () => {}
 }
 
-export function useHydrated() {
-  return useSyncExternalStore(subscribe, () => true, () => false)
-}
-
 export function useSession() {
-  return useSyncExternalStore(subscribeSession, getSnapshot, getServerSnapshot)
+  const session = useSyncExternalStore(
+    subscribeSession,
+    getSnapshot,
+    getServerSnapshot
+  )
+  const ready = useSyncExternalStore(subscribe, () => true, () => false)
+
+  return { session, ready }
 }

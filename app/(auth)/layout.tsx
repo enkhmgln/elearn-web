@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AuthBanner } from "@/features/auth/banner"
 import { constants } from "@/lib/constants"
-import { useHydrated, useSession } from "@/lib/session"
+import { useSession } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -22,19 +22,13 @@ export default function AuthLayout({
   children: React.ReactNode
 }>) {
   const router = useRouter()
-  const session = useSession()
-  const ready = useHydrated()
+  const { session, ready } = useSession()
 
   useEffect(() => {
     if (ready && session) {
       router.replace("/")
     }
   }, [ready, session, router])
-
-  if (!ready || session) {
-    return null
-  }
-
   return (
     <div className="flex min-h-svh px-4 py-3 lg:h-svh lg:px-6 lg:py-4">
       <div className="hidden min-w-0 flex-5 lg:block xl:flex-6">
