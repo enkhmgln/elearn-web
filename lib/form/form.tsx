@@ -59,6 +59,7 @@ function Form({
     >
       <form
         {...props}
+        method="post"
         noValidate
         onSubmit={(event) => {
           event.preventDefault()

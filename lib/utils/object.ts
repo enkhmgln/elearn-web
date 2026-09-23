@@ -20,13 +20,23 @@ export function isEmptyObject(value: object) {
   return Object.keys(value).length === 0
 }
 
-export function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(
+  value: unknown
+): value is Record<string, unknown> {
   if (value == null || typeof value !== "object") {
     return false
   }
 
   const proto = Object.getPrototypeOf(value)
   return proto === Object.prototype || proto === null
+}
+
+export function parseJson(value: string) {
+  try {
+    return JSON.parse(value) as unknown
+  } catch {
+    return null
+  }
 }
 
 export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
@@ -66,7 +76,11 @@ export function getPath(value: unknown, path: string) {
   }, value)
 }
 
-export function setPath<T extends object>(value: T, path: string, next: unknown): T {
+export function setPath<T extends object>(
+  value: T,
+  path: string,
+  next: unknown
+): T {
   if (path === "") {
     return value
   }

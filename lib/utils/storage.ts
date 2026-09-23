@@ -1,3 +1,5 @@
+import { parseJson } from "./object"
+
 function store() {
   if (typeof window === "undefined") {
     return null
@@ -19,11 +21,13 @@ export function getStorage<T>(key: string): T | null {
     return null
   }
 
-  try {
-    return JSON.parse(value) as T
-  } catch {
+  const parsed = parseJson(value)
+
+  if (parsed == null) {
     return null
   }
+
+  return parsed as T
 }
 
 export function getStorageOr<T>(key: string, fallback: T) {

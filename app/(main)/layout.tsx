@@ -1,22 +1,16 @@
-"use client"
+import { redirect } from "next/navigation"
+import { getServerSession } from "@/lib/session/server"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useSession } from "@/lib/session"
-
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const router = useRouter()
-  const { session, ready } = useSession()
+  const session = await getServerSession()
 
-  useEffect(() => {
-    if (ready && !session) {
-      router.replace("/login")
-    }
-  }, [ready, session, router])
+  if (!session) {
+    redirect("/login")
+  }
 
   return children
 }

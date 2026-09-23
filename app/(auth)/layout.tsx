@@ -1,12 +1,9 @@
-"use client"
-
-import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { redirect } from "next/navigation"
 import { AuthBanner } from "@/features/auth/banner"
 import { constants } from "@/lib/constants"
-import { useSession } from "@/lib/session"
+import { getServerSession } from "@/lib/session/server"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -16,19 +13,17 @@ const legalLinks = [
   { href: "/privacy", label: "Нууцлалын бодлого" },
 ] as const
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const router = useRouter()
-  const { session, ready } = useSession()
+  const session = await getServerSession()
 
-  useEffect(() => {
-    if (ready && session) {
-      router.replace("/")
-    }
-  }, [ready, session, router])
+  if (session) {
+    redirect("/")
+  }
+
   return (
     <div className="flex min-h-svh px-4 py-3 lg:h-svh lg:px-6 lg:py-4">
       <div className="hidden min-w-0 flex-5 lg:block xl:flex-6">
