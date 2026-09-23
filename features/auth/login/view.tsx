@@ -1,19 +1,22 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { login } from "@/features/auth/api"
 import { Field, Form, SubmitButton, useForm } from "@/lib/form"
 import { useMutation } from "@/lib/http"
+import { setSession } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/sonner"
 import { loginSchema } from "./schema"
 
 function LoginView() {
+  const router = useRouter()
   const { mutate, isPending } = useMutation(login, {
-    onSuccess() {
-      toast.success("Амжилттай.")
+    onSuccess(result) {
+      setSession(result)
+      router.push("/")
     },
   })
   const form = useForm({

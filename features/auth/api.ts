@@ -51,4 +51,5 @@ export const changeEmail = defineMutation<User, ChangeEmailBody>({
 export const refresh = defineMutation<Session, RefreshBody>({
   method: HttpMethod.POST,
   path: "/api/auth/refresh/",
+  auth: false,
 })

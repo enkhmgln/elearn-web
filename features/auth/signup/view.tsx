@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { sendOtp, signup, verifyOtp } from "@/features/auth/api"
-import { OtpPurpose } from "@/features/auth/types"
+import { OtpPurpose, type AuthResult } from "@/features/auth/types"
 import { Field, Form, SubmitButton, useForm } from "@/lib/form"
 import { useMutation } from "@/lib/http"
+import { setSession } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
-import { toast } from "@/components/ui/sonner"
 import { Input } from "@/components/ui/input"
 import {
   InputOTP,
@@ -127,10 +128,16 @@ function SignupCodeForm({
   )
 }
 
-function SignupProfileForm({ token }: { token: string }) {
+function SignupProfileForm({
+  token,
+  onCreated,
+}: {
+  token: string
+  onCreated: (result: AuthResult) => void
+}) {
   const { mutate, isPending } = useMutation(signup, {
-    onSuccess() {
-      toast.success("Бүртгэл амжилттай.")
+    onSuccess(result) {
+      onCreated(result)
     },
   })
   const form = useForm({
@@ -205,6 +212,7 @@ type SignupState = {
 }
 
 function SignupView() {
+  const router = useRouter()
   const [signup, setSignup] = useState<SignupState>({
     step: "email",
     email: "",
@@ -231,7 +239,15 @@ function SignupView() {
         }}
       />
     ),
-    profile: <SignupProfileForm token={signup.token} />,
+    profile: (
+      <SignupProfileForm
+        token={signup.token}
+        onCreated={(result) => {
+          setSession(result)
+          router.push("/")
+        }}
+      />
+    ),
   }
 
   return (

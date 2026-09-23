@@ -64,6 +64,7 @@ export function defineMutation<
 >(config: {
   method: Exclude<HttpMethod, HttpMethod.GET>
   path: Path<TBody>
+  auth?: boolean
 }): DefinedMutation<TData, TBody> {
   return {
     method: config.method,
@@ -75,6 +76,7 @@ export function defineMutation<
         method: config.method,
         path,
         body,
+        auth: config.auth,
         signal: init?.signal,
       })
     },

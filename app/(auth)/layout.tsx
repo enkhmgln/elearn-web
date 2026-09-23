@@ -1,7 +1,12 @@
+"use client"
+
+import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { AuthBanner } from "@/features/auth/banner"
 import { constants } from "@/lib/constants"
+import { useHydrated, useSession } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
@@ -16,6 +21,20 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const router = useRouter()
+  const session = useSession()
+  const ready = useHydrated()
+
+  useEffect(() => {
+    if (ready && session) {
+      router.replace("/")
+    }
+  }, [ready, session, router])
+
+  if (!ready || session) {
+    return null
+  }
+
   return (
     <div className="flex min-h-svh px-4 py-3 lg:h-svh lg:px-6 lg:py-4">
       <div className="hidden min-w-0 flex-5 lg:block xl:flex-6">
@@ -24,7 +43,13 @@ export default function AuthLayout({
       <div className="grid min-w-0 flex-3 grid-rows-[1fr_auto_1fr] px-6">
         <div className="flex items-center justify-between self-start">
           <Link href="/" className="flex items-center gap-2.5">
-            <Image src="/images/logo.svg" alt="" width={36} height={36} />
+            <Image
+              src="/images/logo.svg"
+              alt=""
+              width={36}
+              height={36}
+              loading="eager"
+            />
             <p className="font-heading text-lg font-semibold tracking-tight">
               {constants.APP_NAME}
             </p>

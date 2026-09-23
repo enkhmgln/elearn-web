@@ -32,7 +32,13 @@ function Footer() {
     <footer className="border-t">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:grid-cols-2 md:px-8 lg:grid-cols-4 lg:items-start">
         <div className="flex items-center gap-2">
-          <Image src="/images/logo.svg" alt="logo" width={32} height={32} />
+          <Image
+            src="/images/logo.svg"
+            alt="logo"
+            width={32}
+            height={32}
+            loading="eager"
+          />
           <p className="text-2xl font-semibold tracking-tight">
             {constants.APP_NAME}
           </p>

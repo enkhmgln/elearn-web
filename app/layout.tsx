@@ -13,6 +13,7 @@ export default function RootLayout({
   return (
     <html
       lang="mn"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={cn("scroll-smooth! font-sans antialiased", gip.variable)}
     >
