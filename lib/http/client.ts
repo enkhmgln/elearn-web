@@ -1,4 +1,3 @@
-import { constants } from "@/lib/constants"
 import { ApiError } from "./error"
 import type { ApiEnvelope } from "./types"
 
@@ -108,11 +107,11 @@ export async function requestText(
 }
 
 function buildUrl(path: string, query?: object) {
-  const url = new URL(path, `${constants.API_URL}/`)
-
   if (!query) {
-    return url
+    return path
   }
+
+  const params = new URLSearchParams()
 
   for (const [key, value] of Object.entries(query)) {
     if (value === undefined || value === null || value === "") {
@@ -123,8 +122,10 @@ function buildUrl(path: string, query?: object) {
       continue
     }
 
-    url.searchParams.set(key, String(value))
+    params.set(key, String(value))
   }
 
-  return url
+  const search = params.toString()
+
+  return search ? `${path}?${search}` : path
 }
